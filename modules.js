@@ -1,20 +1,67 @@
 const path = require('node:path');
 const fs = require('node:fs');
 
-      //Validar si la ruta es absoluta
-      //Si la ruta no es absoluta convertirla a absoluta
-      //Ver si es un archivo o un directorio
-      //Si es un directorio se abre y se recorre que hay dentro. hay archivos .md?
-
+//Valida si la ruta es absoluta, sino la convierte a absoluta
 const pathIsAbsolute = (route) => { //Se recibe la ruta
     const absoluteRoute = path.isAbsolute(route); //Validamos si es absoluta o relativa
-    const convertRoute = !absoluteRoute ? path.resolve(route) : route;
-    return convertRoute;
+    const resolveRoute = !absoluteRoute ? path.resolve(route) : route; // Si la ruta no es absoluta se covierte a absoluta, si si es se entrega
+    return resolveRoute;
 }
 
-const rutaRelativa = 'ruta/relativa/archivo.txt';
+//Valida si la ruta existe
+const pathExists = (route) => { //Se va a validar si la ruta existe
+    return new Promise((resolve, reject) => {
+        fs.access(route, fs.constants.F_OK, (err) => { //fs.access verifica si se puede acceder a un archivo: path es la ruta a validar, fs.constants.F_OK Comprueba si el archivo o directorio existe. Y error  se ejecuta una vez que se completa la verificación. La función de devolución de llamada toma un parámetro de error, donde null indica que no se encontraron errores y, por lo tanto, se puede acceder al archivo o directorio.
+            err ? reject(`Path ${route} does not exist`) : resolve(true);
+            // if (!err){
+            //     resolve(true);
+            // }
+            // else {
+            //     reject('La ruta no existe');
+            // }
+        })
+    })
+}
+
+//Valida si es un archivo .md
+const mdFile = (route) => {
+    //Función para saber si es un fichero markdown
+    const fileExt = path.extname(route); //Saber cual es la extension del archivo
+    const isMdFile = fileExt === '.md' ? true : false; // si es .md es true sino es false
+    return isMdFile;
+}
+
+const readFile = (filePath) => {
+    return new Promise((resolve, reject) => {
+        fs.readFile(filePath, (err, data) => {
+            err ? reject(`Cannot read file ${filePath}`) : resolve(data.toString());
+        })
+    })
+}
+
+
+//PRUEBAS DE FUNCIONES PARA RUTAS
+
+const rutaRelativa = 'archivos/otroArchivo.md';
 const rutaAbsoluta = pathIsAbsolute(rutaRelativa);
-console.log('Ruta:', rutaAbsoluta);
+console.log('Route:', rutaAbsoluta);
 
+pathExists(rutaAbsoluta)
+    .then((exists) => {
+        console.log('The route exists?:', exists);
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
 
-module.exports = { pathIsAbsolute };
+console.log('Is a .md file?:', mdFile(rutaAbsoluta));
+
+readFile(rutaAbsoluta)
+    .then((data) => {
+        console.log('File contents:', data);
+    })
+    .catch((error) => {
+        console.log('Error:', error)
+    });
+
+module.exports = { pathIsAbsolute, pathExists, mdFile };
