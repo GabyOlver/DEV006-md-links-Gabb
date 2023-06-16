@@ -31,12 +31,28 @@ const mdFile = (route) => {
     return isMdFile;
 }
 
+// Valida si se puede leer el contenido del archivo
 const readFile = (filePath) => {
     return new Promise((resolve, reject) => {
         fs.readFile(filePath, (err, data) => {
             err ? reject(`Cannot read file ${filePath}`) : resolve(data.toString());
         })
     })
+}
+
+//Buscando Links en el archivo
+const findLinks = (content, filePath) => {
+    const linksInFile = [];
+    const linksRegExp = /\[([a-zA-Z0-9._ -]+)\]\((?!#)(https?:\/\/[a-zA-Z0-9\/._ -]+)\)/g
+
+    let match;
+    while((match = linksRegExp.exec(content)) !== null) {
+        const linkText = match[1];
+        const linkUrl = match[2];
+        const link = { href: linkText, text: linkUrl, file: filePath };
+        linksInFile.push(link);
+    }
+    return linksInFile;
 }
 
 
@@ -58,10 +74,13 @@ console.log('Is a .md file?:', mdFile(rutaAbsoluta));
 
 readFile(rutaAbsoluta)
     .then((data) => {
-        console.log('File contents:', data);
+        const enlacesEncontrados = findLinks(data, rutaAbsoluta);
+        console.log('Links encontrados', enlacesEncontrados);
     })
     .catch((error) => {
         console.log('Error:', error)
     });
+
+
 
 module.exports = { pathIsAbsolute, pathExists, mdFile };
