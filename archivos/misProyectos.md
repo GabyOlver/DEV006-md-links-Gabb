@@ -26,7 +26,7 @@ Para los usuarios es importante conocer los hechizos y las pociones utilizadas a
 Para los usuarios es importante conocer los libros que componen la saga de Harry Potter además de ciertos datos como autor y fecha de publicación.
 
 Finalmente se incluyen algunos datos adicionales para que el usuario pueda conocer un poco más sobre esta interesante saga.
-[Data Lovers Harry Potter por Gaby Olvera y Claudia Urias](https://gabyolver.github.io/DEV006-data-lovers/src/)
+[Data Lovers Harry Potter por Gaby Olvera y Claudia Urias](https://gabyolver.giub.io/DEV006-data-lovers/src/)
 
 ## 3. Social Network Mascotas
 
