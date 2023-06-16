@@ -1,5 +1,6 @@
 const path = require('node:path');
 const fs = require('node:fs');
+const https = require('node:https');
 
 //Valida si la ruta es absoluta, sino la convierte a absoluta
 const pathIsAbsolute = (route) => { //Se recibe la ruta
@@ -13,12 +14,6 @@ const pathExists = (route) => { //Se va a validar si la ruta existe
     return new Promise((resolve, reject) => {
         fs.access(route, fs.constants.F_OK, (err) => { //fs.access verifica si se puede acceder a un archivo: path es la ruta a validar, fs.constants.F_OK Comprueba si el archivo o directorio existe. Y error  se ejecuta una vez que se completa la verificación. La función de devolución de llamada toma un parámetro de error, donde null indica que no se encontraron errores y, por lo tanto, se puede acceder al archivo o directorio.
             err ? reject(`Path ${route} does not exist`) : resolve(true);
-            // if (!err){
-            //     resolve(true);
-            // }
-            // else {
-            //     reject('La ruta no existe');
-            // }
         })
     })
 }
@@ -43,44 +38,81 @@ const readFile = (filePath) => {
 //Buscando Links en el archivo
 const findLinks = (content, filePath) => {
     const linksInFile = [];
-    const linksRegExp = /\[([a-zA-Z0-9._ -]+)\]\((?!#)(https?:\/\/[a-zA-Z0-9\/._ -]+)\)/g
+    const linksRegExp = /\[([\p{L}0-9._ -]+)\]\((?!#)(https?:\/\/[a-zA-Z0-9\/._ -]+)\)/gu
 
     let match;
-    while((match = linksRegExp.exec(content)) !== null) {
+    while ((match = linksRegExp.exec(content)) !== null) {
         const linkText = match[1];
         const linkUrl = match[2];
-        const link = { href: linkText, text: linkUrl, file: filePath };
+        const link = { href: linkUrl, text: linkText, file: filePath };
         linksInFile.push(link);
     }
     return linksInFile;
 }
 
+//STATUS DEL LINK
+const statusLink = (url) => {
+    return new Promise((resolve, reject) => {
+        const req = https.get(url, (res) => {
+            const statusCode = res.statusCode;
+            let message;
+            res.statusCode >= 400 ? message = 'fail' : message = 'ok';
+            resolve({ statusCode, message });
+        });
+        req.on('close', () => {
+            resolve({ message: 'connection_closed' });
+        });
+        req.on('error', (err) => {
+            if (err.code === "ENOTFOUND") {
+                reject({ statusCode: 404, message: 'fail' })
+            }
+        })
+    })
+}
+
 
 //PRUEBAS DE FUNCIONES PARA RUTAS
 
-const rutaRelativa = 'archivos/otroArchivo.md';
-const rutaAbsoluta = pathIsAbsolute(rutaRelativa);
-console.log('Route:', rutaAbsoluta);
+// const rutaRelativa = 'archivos/misProyectos.md';
+// const rutaAbsoluta = pathIsAbsolute(rutaRelativa);
+// console.log('Route:', rutaAbsoluta);
 
-pathExists(rutaAbsoluta)
-    .then((exists) => {
-        console.log('The route exists?:', exists);
-    })
-    .catch((error) => {
-        console.error('Error:', error);
-    });
+// pathExists(rutaAbsoluta)
+//     .then((exists) => {
+//         console.log('The route exists?:', exists);
+//     })
+//     .catch((error) => {
+//         console.error('Error:', error);
+//     });
 
-console.log('Is a .md file?:', mdFile(rutaAbsoluta));
+// console.log('Is a .md file?:', mdFile(rutaAbsoluta));
 
-readFile(rutaAbsoluta)
-    .then((data) => {
-        const enlacesEncontrados = findLinks(data, rutaAbsoluta);
-        console.log('Links encontrados', enlacesEncontrados);
-    })
-    .catch((error) => {
-        console.log('Error:', error)
-    });
+// readFile(rutaAbsoluta)
+//     .then((data) => {
+//         const enlacesEncontrados = findLinks(data, rutaAbsoluta);
+//         console.log('Links encontrados', enlacesEncontrados);
+//         for (const enlace of enlacesEncontrados) {
+//             statusLink(enlace.href)
+//                 .then((statusCode) => {
+//                     console.log('Status:', statusCode);
+//                 })
+//                 .catch((error) => {
+//                     console.log('Error:', error);
+//                 })
+//         }
+//     })
+//     .catch((error) => {
+//         console.log('Error:', error)
+//     });
 
 
 
-module.exports = { pathIsAbsolute, pathExists, mdFile };
+
+module.exports = {
+    pathIsAbsolute,
+    pathExists,
+    mdFile,
+    readFile,
+    findLinks,
+    statusLink
+};
