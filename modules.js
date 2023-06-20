@@ -76,57 +76,77 @@ const statusLink = (url) => {
 //PRUEBAS DE FUNCIONES PARA RUTAS
 
 const rutaRelativa = 'archivos/misProyectos.md';
-const rutaAbsoluta = pathIsAbsolute(rutaRelativa);
-// const noSeLee = '/ruta/invalida/archivo.txt';
-// console.log('Route:', rutaAbsoluta);
 
-const mdLinks = (route, options = {validate: false}) => {
+const mdLinks = (route, options = { validate: false }) => {
     return new Promise((resolve, reject) => {
-        const resolverRuta = pathIsAbsolute(rutaRelativa);
+        const resolverRuta = pathIsAbsolute(route);
         pathExists(resolverRuta).then((exists) => {
             const isMdFile = mdFile(resolverRuta);
-if (isMdFile) {
-    readFile(resolverRuta)
-        .then((data) => {
-            const enlacesEncontrados = findLinks(data, resolverRuta);
-            const newArr = enlacesEncontrados.map((enlace) => {
-                const link = {
-                    href: enlace.href,
-                    text: enlace.text,
-                    file: enlace.file,
-                }
-                const props = statusLink(enlace.href)
-                    .then((code) => {
-                        return {
-                            ...link,
-                            status: code.statusCode,
-                            ok: code.message,
-                        };
+            if (isMdFile) {
+                readFile(resolverRuta)
+                    .then((data) => {
+                        if (options.validate) {
+                            const enlacesEncontrados = findLinks(data, resolverRuta);
+                            const newArr = enlacesEncontrados.map((enlace) => {
+                                const link = {
+                                    href: enlace.href,
+                                    text: enlace.text,
+                                    file: enlace.file,
+                                }
+                                const props = statusLink(enlace.href)
+                                    .then((code) => {
+                                        return {
+                                            ...link,
+                                            status: code.statusCode,
+                                            ok: code.message,
+                                        };
+                                    })
+                                    .catch((err) => {
+                                        return {
+                                            ...link,
+                                            status: err.statusCode,
+                                            ok: err.message,
+
+                                        };
+                                    });
+                                return props
+                            });
+                            return Promise.all(newArr)
+                        } else {
+                            const enlacesEncontrados = findLinks(data, resolverRuta);
+                            const urlsArray = enlacesEncontrados.map((enlace) => {
+                                return {
+                                    href: enlace.href,
+                                }
+                            })
+                            return Promise.all(urlsArray);
+                        }
                     })
-                    .catch((err) => {
-                        return {
-                            ...link,
-                            status: err.statusCode,
-                            ok: err.message,
-            
-                        };
-                    });
-                return props
-                  
-            });
-           return Promise.all(newArr)
+
+                    .then((results) => {
+                        const resultsArray = results.flat();
+                        resolve(resultsArray.length === 0 ? [] : resultsArray)
+                    })
+                    .catch((error) => {
+                        reject(error);
+                    })
+            } else {
+                console.log('No es .md terminamos')
+            }
         })
-        
-        .then((data) => console.log(data))
-     .catch((error) => {
-            console.log('Error:', error);
-        })
-} else {
-    console.log('No es .md terminamos')
-}
+        .catch((err) => {
+            console.log(err)
         })
     })
 }
+
+// mdLinks(rutaRelativa, options = { validate: false})
+//     .then((result) => {
+//         console.log(result);
+//     })
+//     .catch((err) => {
+//         console.log('Error:', err)
+//     });
 
 
 module.exports = {
@@ -137,3 +157,45 @@ module.exports = {
     findLinks,
     statusLink
 };
+
+// const resolverRuta = pathIsAbsolute(route);
+// pathExists(resolverRuta).then((exists) => {
+//     const isMdFile = mdFile(resolverRuta);
+//     if (isMdFile) {
+//         readFile(resolverRuta)
+//             .then((data) => {
+//                 if (options.validate) {
+//                     const enlacesEncontrados = findLinks(data, resolverRuta);
+//                     const newArr = enlacesEncontrados.map((enlace) => {
+//                         const link = {
+//                             href: enlace.href,
+//                             text: enlace.text,
+//                             file: enlace.file,
+//                         }
+//                         const props = statusLink(enlace.href)
+//                             .then((code) => {
+//                                 return {
+//                                     ...link,
+//                                     status: code.statusCode,
+//                                     ok: code.message,
+//                                 };
+//                             })
+//                             .catch((err) => {
+//                                 return {
+//                                     ...link,
+//                                     status: err.statusCode,
+//                                     ok: err.message,
+
+//                                 };
+//                             });
+//                         return props
+//                     });
+//                 } else {
+//                     return link
+//                 }
+//                 return Promise.all(newArr)// investigar
+//             })
+//     } else {
+//         console.log('No es .md terminamos')
+//     }
+// })

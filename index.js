@@ -8,30 +8,73 @@ const {
   statusLink
 } = require('./modules.js');
 
-const mdLinks = (route, options = { validate: true}) => {
-  return new Promie((resolve, reject) => {
+const mdLinks = (route, options = { validate: false }) => {
+  return new Promise((resolve, reject) => {
     const resolvedPath = pathIsAbsolute(route);
     pathExists(resolvedPath).then((exists) => {
       const isMdFile = mdFile(resolvedPath);
-      if(isMdFile) {
+      if (isMdFile) {
         readFile(resolvedPath).then((data) => {
-          const linksInFile = findLinks(data, resolvedPath);
-          for( const linkInFile of linksInFile) {
-            statusLink(enlace.href).then((statusCode) => {
-              console.log(statusCode);
-            })
-            .catch((error) => {
-              console.log('Error:', error);
-            })
+          if (options.validate) {
+            const foundLinks = findLinks(data, resolvedPath);
+            const linksArray = foundLinks.map((link) => {
+              const linkProperties = {
+                href: link.href,
+                text: link.text,
+                file: link.file,
+              }
+              const linkStatus = statusLink(link.href)
+                .then((status) => {
+                  return {
+                    ...linkProperties,
+                    status: status.statusCode,
+                    ok: status.message,
+                  }
+                })
+                .catch((err) => {
+                  return {
+                    ...linkProperties,
+                    status: err.statusCode,
+                    ok: err.message,
+                  };
+                });
+              return linkStatus;
+            });
+            return Promise.all(linksArray);
+          } else {
+            const foundLinks = findLinks(data, resolvedPath);
+            return foundLinks;
           }
         })
-        .catch((error) => {
-          console.log('Error:', error);
-      })
-      } 
+          .then((results) => {
+            const resultsArray = results.flat();
+            resolve(resultsArray.length === 0 ? [] : resultsArray)
+          })
+          .catch((err) => {
+            reject(err.code)
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      } else {
+        console.log('It is not a .md file')
+      }
     })
+      .catch((err) => {
+        console.log('\x1b[31m%s\x1b[0m', err)
+      })
   })
 }
+
+const relativeRoute = 'archivos\muchoTexto.txt'
+
+mdLinks(relativeRoute, options = {validate: false})
+  .then((result) => {
+    console.log(result);
+  })
+  .catch((err) => {
+    console.log(err)
+  })
 
 module.exports = {
   mdLinks
