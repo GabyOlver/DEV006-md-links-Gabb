@@ -20,10 +20,11 @@ const pathExists = (route) => { //Se va a validar si la ruta existe
 
 //Valida si es un archivo .md
 const mdFile = (route) => {
-    //Función para saber si es un fichero markdown
     const fileExt = path.extname(route); //Saber cual es la extension del archivo
-    const isMdFile = fileExt === '.md' ? true : false; // si es .md es true sino es false
-    return isMdFile;
+    return fileExt !== '.md' ? (() => {
+        console.log('No .md files found');
+        process.exit(); // return false;?
+    })() : true;
 }
 
 // Valida si se puede leer el contenido del archivo
@@ -46,6 +47,7 @@ const findLinks = (content, filePath) => {
         const linkUrl = match[2];
         const link = { href: linkUrl, text: linkText, file: filePath };
         linksInFile.push(link);
+
     }
     return linksInFile;
 }
@@ -73,39 +75,58 @@ const statusLink = (url) => {
 
 //PRUEBAS DE FUNCIONES PARA RUTAS
 
-// const rutaRelativa = 'archivos/misProyectos.md';
-// const rutaAbsoluta = pathIsAbsolute(rutaRelativa);
+const rutaRelativa = 'archivos/misProyectos.md';
+const rutaAbsoluta = pathIsAbsolute(rutaRelativa);
+// const noSeLee = '/ruta/invalida/archivo.txt';
 // console.log('Route:', rutaAbsoluta);
 
-// pathExists(rutaAbsoluta)
-//     .then((exists) => {
-//         console.log('The route exists?:', exists);
-//     })
-//     .catch((error) => {
-//         console.error('Error:', error);
-//     });
-
-// console.log('Is a .md file?:', mdFile(rutaAbsoluta));
-
-// readFile(rutaAbsoluta)
-//     .then((data) => {
-//         const enlacesEncontrados = findLinks(data, rutaAbsoluta);
-//         console.log('Links encontrados', enlacesEncontrados);
-//         for (const enlace of enlacesEncontrados) {
-//             statusLink(enlace.href)
-//                 .then((statusCode) => {
-//                     console.log('Status:', statusCode);
-//                 })
-//                 .catch((error) => {
-//                     console.log('Error:', error);
-//                 })
-//         }
-//     })
-//     .catch((error) => {
-//         console.log('Error:', error)
-//     });
-
-
+const mdLinks = (route, options = {validate: false}) => {
+    return new Promise((resolve, reject) => {
+        const resolverRuta = pathIsAbsolute(rutaRelativa);
+        pathExists(resolverRuta).then((exists) => {
+            const isMdFile = mdFile(resolverRuta);
+if (isMdFile) {
+    readFile(resolverRuta)
+        .then((data) => {
+            const enlacesEncontrados = findLinks(data, resolverRuta);
+            const newArr = enlacesEncontrados.map((enlace) => {
+                const link = {
+                    href: enlace.href,
+                    text: enlace.text,
+                    file: enlace.file,
+                }
+                const props = statusLink(enlace.href)
+                    .then((code) => {
+                        return {
+                            ...link,
+                            status: code.statusCode,
+                            ok: code.message,
+                        };
+                    })
+                    .catch((err) => {
+                        return {
+                            ...link,
+                            status: err.statusCode,
+                            ok: err.message,
+            
+                        };
+                    });
+                return props
+                  
+            });
+           return Promise.all(newArr)
+        })
+        
+        .then((data) => console.log(data))
+     .catch((error) => {
+            console.log('Error:', error);
+        })
+} else {
+    console.log('No es .md terminamos')
+}
+        })
+    })
+}
 
 
 module.exports = {

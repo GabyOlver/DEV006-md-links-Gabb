@@ -1,5 +1,5 @@
 const fs = require('node:fs');
-const { 
+const {
   pathIsAbsolute,
   pathExists,
   mdFile,
@@ -8,50 +8,30 @@ const {
   statusLink
 } = require('./modules.js');
 
-
-const mdLinks = (route, options) => {
-  return new Promise((resolve, reject) => { // resolve y reject son callbacks, funciones que pasamos como parametro a .then y .catch
-    const isAbsolute = pathIsAbsolute(route);
-
-    pathExists(isAbsolute)
-      .then((exists) => {
-        console.log('The route exists?:', exists);
+const mdLinks = (route, options = { validate: true}) => {
+  return new Promie((resolve, reject) => {
+    const resolvedPath = pathIsAbsolute(route);
+    pathExists(resolvedPath).then((exists) => {
+      const isMdFile = mdFile(resolvedPath);
+      if(isMdFile) {
+        readFile(resolvedPath).then((data) => {
+          const linksInFile = findLinks(data, resolvedPath);
+          for( const linkInFile of linksInFile) {
+            statusLink(enlace.href).then((statusCode) => {
+              console.log(statusCode);
+            })
+            .catch((error) => {
+              console.log('Error:', error);
+            })
+          }
+        })
+        .catch((error) => {
+          console.log('Error:', error);
       })
-      .catch((error) => {
-        console.log('Error:', error)
-      });
-
-  });
+      } 
+    })
+  })
 }
-
-// pathExists(rutaAbsoluta)
-//     .then((exists) => {
-//         console.log('The route exists?:', exists);
-//     })
-
-
-// console.log('Is a .md file?:', mdFile(rutaAbsoluta));
-
-// readFile(rutaAbsoluta)
-//     .then((data) => {
-//         const enlacesEncontrados = findLinks(data, rutaAbsoluta);
-//         console.log('Links encontrados', enlacesEncontrados);
-//         for (const enlace of enlacesEncontrados) {
-//             statusLink(enlace.href)
-//                 .then((statusCode) => {
-//                     console.log('Status:', statusCode);
-//                 })
-//                 .catch((error) => {
-//                     console.log('Error:', error);
-//                 })
-//         }
-//     })
-//     .catch((error) => {
-//         console.log('Error:', error)
-//     });
-
-
-
 
 module.exports = {
   mdLinks
