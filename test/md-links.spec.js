@@ -1,17 +1,13 @@
-const { mdLinks } = require('../index.js');
+const mdLinks = require('../index.js');
 
 
 describe('mdLinks', () => {
 
-  it('should...', () => {
-    console.log('FIX ME!');
-  });
-  // it('Deberia devolver una promesa', () => {
-  //   expect(mdLinks()).toBeInstanceOf(Promise)
-  // });
-  // it('Rechaza la promesa cuando el path no existe', () => {
-  //   return mdLinks('/este/path/no/existe.md').catch((error) => {
-  //     expect(error).toBe('La ruta no es valida')
-  //   })
-  // });
+  it('should be a function.', () => {
+    expect(typeof mdLinks).toBe('function')
+})
+it('Should return an error when the path does not exist', () => {
+  const testPath ='./some/path';
+  return expect(mdLinks(testPath)).rejects.toEqual(`Path does not exist`)
+})
 });

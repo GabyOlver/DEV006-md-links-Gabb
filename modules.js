@@ -13,7 +13,7 @@ const pathIsAbsolute = (route) => { //Se recibe la ruta
 const pathExists = (route) => { //Se va a validar si la ruta existe
     return new Promise((resolve, reject) => {
         fs.access(route, fs.constants.F_OK, (err) => { //fs.access verifica si se puede acceder a un archivo: path es la ruta a validar, fs.constants.F_OK Comprueba si el archivo o directorio existe. Y error  se ejecuta una vez que se completa la verificación. La función de devolución de llamada toma un parámetro de error, donde null indica que no se encontraron errores y, por lo tanto, se puede acceder al archivo o directorio.
-            err ? reject(`Path ${route} does not exist`) : resolve(true);
+            err ? reject(`Path does not exist`) : resolve(true);
         })
     })
 }
@@ -26,6 +26,9 @@ const mdFile = (route) => {
         process.exit(); // return false;?
     })() : true;
 }
+
+//Validar si es un directorio
+//Buscar archivos en el directorio
 
 // Valida si se puede leer el contenido del archivo
 const readFile = (filePath) => {
@@ -157,45 +160,3 @@ module.exports = {
     findLinks,
     statusLink
 };
-
-// const resolverRuta = pathIsAbsolute(route);
-// pathExists(resolverRuta).then((exists) => {
-//     const isMdFile = mdFile(resolverRuta);
-//     if (isMdFile) {
-//         readFile(resolverRuta)
-//             .then((data) => {
-//                 if (options.validate) {
-//                     const enlacesEncontrados = findLinks(data, resolverRuta);
-//                     const newArr = enlacesEncontrados.map((enlace) => {
-//                         const link = {
-//                             href: enlace.href,
-//                             text: enlace.text,
-//                             file: enlace.file,
-//                         }
-//                         const props = statusLink(enlace.href)
-//                             .then((code) => {
-//                                 return {
-//                                     ...link,
-//                                     status: code.statusCode,
-//                                     ok: code.message,
-//                                 };
-//                             })
-//                             .catch((err) => {
-//                                 return {
-//                                     ...link,
-//                                     status: err.statusCode,
-//                                     ok: err.message,
-
-//                                 };
-//                             });
-//                         return props
-//                     });
-//                 } else {
-//                     return link
-//                 }
-//                 return Promise.all(newArr)// investigar
-//             })
-//     } else {
-//         console.log('No es .md terminamos')
-//     }
-// })
