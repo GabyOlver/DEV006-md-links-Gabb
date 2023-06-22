@@ -1,5 +1,4 @@
 const colors = require('colors');
-
 const fs = require('node:fs');
 const {
   pathIsAbsolute,
