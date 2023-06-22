@@ -1,3 +1,5 @@
+const colors = require('colors');
+
 const fs = require('node:fs');
 const {
   pathIsAbsolute,
@@ -5,10 +7,14 @@ const {
   mdFile,
   readFile,
   findLinks,
+  
   statusLink
 } = require('./modules.js');
 
-const mdLinks = (route, options = { validate: false }) => {
+const route = process.argv[2]
+const options = {validate: process.argv[3]}
+
+const mdLinks = (route, options) => {
   return new Promise((resolve, reject) => {
     const resolvedPath = pathIsAbsolute(route);
     pathExists(resolvedPath).then((exists) => {
@@ -61,21 +67,18 @@ const mdLinks = (route, options = { validate: false }) => {
       }
     })
       .catch((err) => {
-        console.log('\x1b[31m%s\x1b[0m', err)
+        console.log(colors.bold.red(err))
       })
   })
 }
 
-const relativeRoute = 'archivos\muchoTexto.txt'
+// mdLinks(route, options)
+//   .then((result) => {
+//     console.log(result);
+//   })
+//   .catch((err) => {
+//     console.log(err)
+//   })
 
-mdLinks(relativeRoute, options = {validate: false})
-  .then((result) => {
-    console.log(result);
-  })
-  .catch((err) => {
-    console.log(err)
-  })
+module.exports = mdLinks
 
-module.exports = {
-  mdLinks
-};
