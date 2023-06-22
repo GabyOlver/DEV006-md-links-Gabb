@@ -33,8 +33,8 @@ const mdFile = (route) => {
 // Valida si se puede leer el contenido del archivo
 const readFile = (filePath) => {
     return new Promise((resolve, reject) => {
-        fs.readFile(filePath, 'utf8', (err, data) => {
-            err ? reject('Cannot read file') : resolve(data);
+        fs.readFile(filePath, (err, data) => {
+            err ? reject('Cannot read file') : resolve(data.toString());
         })
     })
 }
