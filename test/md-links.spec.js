@@ -10,7 +10,8 @@ const {
 } = require('../modules.js')
 
 const route = './archivos/misProyectos.md'
-const options = { validate: true }
+const optionTrue = { validate: true }
+const optionFalse = { validate: false }
 
 describe('mdLinks', () => {
 
@@ -18,7 +19,7 @@ describe('mdLinks', () => {
     expect(typeof mdLinks).toBe('function')
 });
 it('Deberia retornar una promesa que se resuelve con un array de objetos', (done) => {
-  const result = mdLinks(route, options)
+  const result = mdLinks(route, optionTrue)
    expect(result).resolves.toEqual([
         {
          "file": "C:\\Users\\gabyo\\OneDrive\\Escritorio\\DEV006-md-links-Gabb\\archivos\\misProyectos.md",
@@ -42,6 +43,31 @@ it('Deberia retornar una promesa que se resuelve con un array de objetos', (done
          "text": "Social Network Mascotas por Gaby Olvera",
        },
     ]).then(done)
+});
+it('Deberia retornar una promesa que se resuelve con un array de objetos sin validar', (done) => {
+  const result = mdLinks(route, optionFalse)
+   expect(result).resolves.toEqual([
+        {
+         "file": "C:\\Users\\gabyo\\OneDrive\\Escritorio\\DEV006-md-links-Gabb\\archivos\\misProyectos.md",
+         "href": "https://gabyolver.github.io/",
+         "text": "Cifrado César por Gaby Olvera",
+       },
+        {
+         "file": "C:\\Users\\gabyo\\OneDrive\\Escritorio\\DEV006-md-links-Gabb\\archivos\\misProyectos.md",
+         "href": "https://gabyolver.giub.io/DEV006-data-lovers/src/",
+         "text": "Data Lovers Harry Potter por Gaby Olvera y Claudia Urias",
+       },
+        {
+         "file": "C:\\Users\\gabyo\\OneDrive\\Escritorio\\DEV006-md-links-Gabb\\archivos\\misProyectos.md",
+         "href": "https://encuentra-a-tu-mascota.netlify.app/",
+         "text": "Social Network Mascotas por Gaby Olvera",
+       },
+    ]).then(done)
+});
+it('Debe arrojar un error si no se cumple la promesa', () => {
+  return (mdLinks(route)).catch((err) => {
+    expect(err).toBe('An error occurred, check your route.')
+  });
 });
 });
 

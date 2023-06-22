@@ -53,7 +53,7 @@ const mdLinks = (route, options) => {
             resolve(resultsArray.length === 0 ? [] : resultsArray)
           })
           .catch((err) => {
-            reject(err.code)
+            reject('An error occurred, check your route.')
           })
           .catch((err) => {
             console.log(err)
