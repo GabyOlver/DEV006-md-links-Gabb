@@ -129,13 +129,3 @@ describe('readFile', () => {
     return expect(readFile(pathTest)).rejects.toEqual('Cannot read file')
   });
 });
-
-// describe('findLinks', () => {
-//   it('Should be a function', () => {
-//     expect(typeof findLinks).toBe('function');
-//   })
-//   it('Se debe crar un array vacio', () => {
-//     const sinLinks = './archivos/noHayLink.md'
-//     expect(findLinks(sinLinks)).toEqual([]);
-//   })
-// })
