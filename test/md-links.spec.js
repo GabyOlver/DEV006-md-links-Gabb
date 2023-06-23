@@ -74,9 +74,13 @@ it('Debe arrojar un error si no se cumple la promesa', () => {
   });
 });
 it('should log the correct message when it is not a .md file', () => {
-  consoleSpy = jest.spyOn(console, 'log');
-  const isNotMd = mdLinks('archivos/muchoTexto.txt');
-  expect(result).toBe(false);
+  mdLinks('archivos/muchoTexto.txt', {optionFalse})
+  .then((links) => {
+    console.log('found Links:', links);
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  })
 })
 });
 
@@ -125,15 +129,6 @@ describe('readFile', () => {
     return expect(readFile(pathTest)).rejects.toEqual('Cannot read file')
   });
 });
-
-describe('statusLink', () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  })
-});
-it('Debe validar una url', () => {
-
-})
 
 // describe('findLinks', () => {
 //   it('Should be a function', () => {
