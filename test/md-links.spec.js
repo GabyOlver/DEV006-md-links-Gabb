@@ -3,7 +3,7 @@ const https = require('https');
 
 jest.mock('https');
 
-const { mdLinks } = require('../index.js');
+const { mdLinks } = require('../src/index.js');
 const { 
   pathIsAbsolute,
   pathExists,
@@ -11,7 +11,7 @@ const {
   readFile,
   findLinks,
   statusLink,
-} = require('../modules.js')
+} = require('../src/modules.js')
 
 const route = './archivos/misProyectos.md'
 const optionTrue = { validate: true }

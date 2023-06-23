@@ -1,6 +1,7 @@
+#!/usr/bin/env node
 // // argumentos de linea de comandos
-// //requerir mdLinks
-const { mdLinks } = require('./index.js');
+const colors = require('colors');
+const { mdLinks } = require('./src/index.js');
 
 const route = process.argv[2]
 const options = {validate: process.argv[3]}
