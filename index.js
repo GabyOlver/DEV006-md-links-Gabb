@@ -1,5 +1,4 @@
 const colors = require('colors');
-
 const fs = require('node:fs');
 const {
   pathIsAbsolute,
@@ -10,9 +9,6 @@ const {
   
   statusLink
 } = require('./modules.js');
-
-const route = process.argv[2]
-const options = {validate: process.argv[3]}
 
 const mdLinks = (route, options) => {
   return new Promise((resolve, reject) => {
@@ -57,28 +53,14 @@ const mdLinks = (route, options) => {
             resolve(resultsArray.length === 0 ? [] : resultsArray)
           })
           .catch((err) => {
-            reject(err.code)
-          })
-          .catch((err) => {
-            console.log(err)
+            reject('An error occurred, check your route.')
           })
       } else {
         console.log('It is not a .md file')
       }
     })
-      .catch((err) => {
-        console.log(colors.bold.red(err))
-      })
   })
 }
 
-// mdLinks(route, options)
-//   .then((result) => {
-//     console.log(result);
-//   })
-//   .catch((err) => {
-//     console.log(err)
-//   })
-
-module.exports = mdLinks
+module.exports = { mdLinks }
 

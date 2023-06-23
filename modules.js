@@ -13,7 +13,7 @@ const pathIsAbsolute = (route) => { //Se recibe la ruta
 const pathExists = (route) => { //Se va a validar si la ruta existe
     return new Promise((resolve, reject) => {
         fs.access(route, fs.constants.F_OK, (err) => { //fs.access verifica si se puede acceder a un archivo: path es la ruta a validar, fs.constants.F_OK Comprueba si el archivo o directorio existe. Y error  se ejecuta una vez que se completa la verificación. La función de devolución de llamada toma un parámetro de error, donde null indica que no se encontraron errores y, por lo tanto, se puede acceder al archivo o directorio.
-            err ? reject(`Path does not exist`) : resolve(true);
+            err ? reject('Path does not exist') : resolve(true);
         })
     })
 }
@@ -23,7 +23,7 @@ const mdFile = (route) => {
     const fileExt = path.extname(route); //Saber cual es la extension del archivo
     return fileExt !== '.md' ? (() => {
         console.log('No .md files found');
-        process.exit(); // return false;?
+        return false; //process.exit(); 
     })() : true;
 }
 
@@ -34,7 +34,7 @@ const mdFile = (route) => {
 const readFile = (filePath) => {
     return new Promise((resolve, reject) => {
         fs.readFile(filePath, (err, data) => {
-            err ? reject(`Cannot read file ${filePath}`) : resolve(data.toString());
+            err ? reject('Cannot read file') : resolve(data.toString());
         })
     })
 }
@@ -78,70 +78,70 @@ const statusLink = (url) => {
 
 //PRUEBAS DE FUNCIONES PARA RUTAS
 
-const rutaRelativa = 'archivos/misProyectos.md';
+// const rutaRelativa = 'archivos/misProyectos.md';
 
-const mdLinks = (route, options = { validate: false }) => {
-    return new Promise((resolve, reject) => {
-        const resolverRuta = pathIsAbsolute(route);
-        pathExists(resolverRuta).then((exists) => {
-            const isMdFile = mdFile(resolverRuta);
-            if (isMdFile) {
-                readFile(resolverRuta)
-                    .then((data) => {
-                        if (options.validate) {
-                            const enlacesEncontrados = findLinks(data, resolverRuta);
-                            const newArr = enlacesEncontrados.map((enlace) => {
-                                const link = {
-                                    href: enlace.href,
-                                    text: enlace.text,
-                                    file: enlace.file,
-                                }
-                                const props = statusLink(enlace.href)
-                                    .then((code) => {
-                                        return {
-                                            ...link,
-                                            status: code.statusCode,
-                                            ok: code.message,
-                                        };
-                                    })
-                                    .catch((err) => {
-                                        return {
-                                            ...link,
-                                            status: err.statusCode,
-                                            ok: err.message,
+// const mdLinks = (route, options = { validate: false }) => {
+//     return new Promise((resolve, reject) => {
+//         const resolverRuta = pathIsAbsolute(route);
+//         pathExists(resolverRuta).then((exists) => {
+//             const isMdFile = mdFile(resolverRuta);
+//             if (isMdFile) {
+//                 readFile(resolverRuta)
+//                     .then((data) => {
+//                         if (options.validate) {
+//                             const enlacesEncontrados = findLinks(data, resolverRuta);
+//                             const newArr = enlacesEncontrados.map((enlace) => {
+//                                 const link = {
+//                                     href: enlace.href,
+//                                     text: enlace.text,
+//                                     file: enlace.file,
+//                                 }
+//                                 const props = statusLink(enlace.href)
+//                                     .then((code) => {
+//                                         return {
+//                                             ...link,
+//                                             status: code.statusCode,
+//                                             ok: code.message,
+//                                         };
+//                                     })
+//                                     .catch((err) => {
+//                                         return {
+//                                             ...link,
+//                                             status: err.statusCode,
+//                                             ok: err.message,
 
-                                        };
-                                    });
-                                return props
-                            });
-                            return Promise.all(newArr)
-                        } else {
-                            const enlacesEncontrados = findLinks(data, resolverRuta);
-                            const urlsArray = enlacesEncontrados.map((enlace) => {
-                                return {
-                                    href: enlace.href,
-                                }
-                            })
-                            return Promise.all(urlsArray);
-                        }
-                    })
+//                                         };
+//                                     });
+//                                 return props
+//                             });
+//                             return Promise.all(newArr)
+//                         } else {
+//                             const enlacesEncontrados = findLinks(data, resolverRuta);
+//                             const urlsArray = enlacesEncontrados.map((enlace) => {
+//                                 return {
+//                                     href: enlace.href,
+//                                 }
+//                             })
+//                             return Promise.all(urlsArray);
+//                         }
+//                     })
 
-                    .then((results) => {
-                        const resultsArray = results.flat();
-                        resolve(resultsArray.length === 0 ? [] : resultsArray)
-                    })
-                    .catch((error) => {
-                        reject(error);
-                    })
-            } else {
-                console.log('No es .md terminamos')
-            }
-        })
-        .catch((err) => {
-            console.log(err)
-        })
-    })
-}
+//                     .then((results) => {
+//                         const resultsArray = results.flat();
+//                         resolve(resultsArray.length === 0 ? [] : resultsArray)
+//                     })
+//                     .catch((error) => {
+//                         reject(error);
+//                     })
+//             } else {
+//                 console.log('No es .md terminamos')
+//             }
+//         })
+//         .catch((err) => {
+//             console.log(err)
+//         })
+//     })
+// }
 
 // mdLinks(rutaRelativa, options = { validate: false})
 //     .then((result) => {
