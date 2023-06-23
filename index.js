@@ -55,16 +55,10 @@ const mdLinks = (route, options) => {
           .catch((err) => {
             reject('An error occurred, check your route.')
           })
-          .catch((err) => {
-            console.log(err)
-          })
       } else {
         console.log('It is not a .md file')
       }
     })
-      .catch((err) => {
-        console.log(colors.bold.red(err))
-      })
   })
 }
 

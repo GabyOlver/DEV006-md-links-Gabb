@@ -1,5 +1,8 @@
 const path = require('node:path');
-// const fs = require('node:fs');
+const https = require('https');
+
+jest.mock('https');
+
 const { mdLinks } = require('../index.js');
 const { 
   pathIsAbsolute,
@@ -7,6 +10,7 @@ const {
   mdFile,
   readFile,
   findLinks,
+  statusLink,
 } = require('../modules.js')
 
 const route = './archivos/misProyectos.md'
@@ -69,6 +73,11 @@ it('Debe arrojar un error si no se cumple la promesa', () => {
     expect(err).toBe('An error occurred, check your route.')
   });
 });
+it('should log the correct message when it is not a .md file', () => {
+  consoleSpy = jest.spyOn(console, 'log');
+  const isNotMd = mdLinks('archivos/muchoTexto.txt');
+  expect(result).toBe(false);
+})
 });
 
 // MODULES.JS TESTS
@@ -116,6 +125,15 @@ describe('readFile', () => {
     return expect(readFile(pathTest)).rejects.toEqual('Cannot read file')
   });
 });
+
+describe('statusLink', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  })
+});
+it('Debe validar una url', () => {
+
+})
 
 // describe('findLinks', () => {
 //   it('Should be a function', () => {
