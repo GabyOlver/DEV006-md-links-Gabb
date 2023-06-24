@@ -17,8 +17,8 @@ const mdLinks = (route, options) => {
       const isMdFile = mdFile(resolvedPath);
       if (isMdFile) {
         readFile(resolvedPath).then((data) => {
+          const foundLinks = findLinks(data, resolvedPath);
           if (options.validate) {
-            const foundLinks = findLinks(data, resolvedPath);
             const linksArray = foundLinks.map((link) => {
               const linkProperties = {
                 href: link.href,
@@ -33,13 +33,6 @@ const mdLinks = (route, options) => {
                     ok: status.message,
                   }
                 })
-                .catch((err) => {
-                  return {
-                    ...linkProperties,
-                    status: err.statusCode,
-                    ok: err.message,
-                  };
-                });
               return linkStatus;
             });
             return Promise.all(linksArray);
