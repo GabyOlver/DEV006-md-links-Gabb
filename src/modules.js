@@ -69,7 +69,7 @@ const statusLink = (url) => {
         });
         req.on('error', (err) => {
             if (err.code === "ENOTFOUND") {
-                reject({ statusCode: 404, message: 'fail' })
+                resolve({ statusCode: 404, message: 'fail' })
             }
         })
     })
