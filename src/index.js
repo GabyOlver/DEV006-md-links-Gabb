@@ -6,11 +6,13 @@ const {
   mdFile,
   readFile,
   findLinks,
-  
   statusLink
 } = require('./modules.js');
 
-const mdLinks = (route, options) => {
+// const route = process.argv[2]
+// const options = {validate: process.argv[3]}
+
+const mdLinks = (route, options = {validate: false}) => {
   return new Promise((resolve, reject) => {
     const resolvedPath = pathIsAbsolute(route);
     pathExists(resolvedPath).then((exists) => {
@@ -46,7 +48,7 @@ const mdLinks = (route, options) => {
             resolve(resultsArray.length === 0 ? [] : resultsArray)
           })
           .catch((err) => {
-            reject('An error occurred, check your route.')
+            reject(err)
           })
       } else {
         console.log('It is not a .md file')
@@ -54,6 +56,14 @@ const mdLinks = (route, options) => {
     })
   })
 }
+
+// mdLinks(route, options)
+//   .then((result) => {
+//     console.log(colors.magenta(result));
+//   })
+//   .catch((err) => {
+//     console.log(err)
+//   })
 
 module.exports = { mdLinks }
 
