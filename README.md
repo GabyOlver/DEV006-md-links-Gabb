@@ -9,8 +9,10 @@
 * [5. Flowchart](#5-flowchart)
 
 ***
+<p align="center">
+  <img src="./md-.png" alt="md-links">
+</p>
 
-![md-links](./md-.png)
 ## 1. Description
 
 This npm package is a tool that implements a Command Line Interface (CLI) to facilitate the validation of Markdown (md) files and extract the links found in them. The main objective is to provide the user with the ability to parse md files and obtain relevant information about the links present in them.
