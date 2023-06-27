@@ -14,7 +14,6 @@
 * [10. Achicando el problema](#10-achicando-el-problema)
 
 ***
-#md-links-gabyolvera
 ![md-links](./md-.png)
 ## 1. Description
 
