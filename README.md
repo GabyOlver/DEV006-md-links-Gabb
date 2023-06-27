@@ -1,20 +1,18 @@
-# Markdown Links
+# md-links-gabyolvera
 
-## Índice
+## Table of contents
 
 * [1. Description](#1-description)
 * [2. Install](#2-install)
 * [3. Usage](#3-usage)
 * [4. Results](#4-results)
-* [5. Criterios de aceptación mínimos del proyecto](#5-criterios-de-aceptación-mínimos-del-proyecto)
-* [6. Entregables](#6-entregables)
-* [7. Hacker edition](#7-hacker-edition)
-* [8. Pistas, tips y lecturas complementarias](#8-pistas-tips-y-lecturas-complementarias)
-* [9. Checklist](#9-checklist)
-* [10. Achicando el problema](#10-achicando-el-problema)
+* [5. Flowchart](#5-flowchart)
 
 ***
-![md-links](./md-.png)
+<p align="center">
+  <img src="./md-.png" alt="md-links">
+</p>
+
 ## 1. Description
 
 This npm package is a tool that implements a Command Line Interface (CLI) to facilitate the validation of Markdown (md) files and extract the links found in them. The main objective is to provide the user with the ability to parse md files and obtain relevant information about the links present in them.
