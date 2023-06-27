@@ -1,20 +1,17 @@
 # Markdown Links
 
-## Índice
+## Table of contents
 
 * [1. Description](#1-description)
 * [2. Install](#2-install)
 * [3. Usage](#3-usage)
 * [4. Results](#4-results)
-* [5. Criterios de aceptación mínimos del proyecto](#5-criterios-de-aceptación-mínimos-del-proyecto)
-* [6. Entregables](#6-entregables)
-* [7. Hacker edition](#7-hacker-edition)
-* [8. Pistas, tips y lecturas complementarias](#8-pistas-tips-y-lecturas-complementarias)
-* [9. Checklist](#9-checklist)
-* [10. Achicando el problema](#10-achicando-el-problema)
+* [5. Flowchart](#5-flowchart)
+
 
 ***
-#md-links-gabyolvera
+# md-links-gabyolvera
+
 ![md-links](./md-.png)
 ## 1. Description
 
