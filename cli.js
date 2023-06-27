@@ -11,7 +11,7 @@ const [, , ...args] = process.argv;
 const validateOption = args.includes('--validate');
 const statsOption = args.includes('--stats');
 
-const howToUse = 'Use: mdLinks + filepath + [--validate] and/or [--stats]';
+const howToUse = 'Use: md-links <path-to-file> [options]';
 const commands = '--validate: validates the status of found links\n --stats: Gives link statistics'
 const description = 'It is a CLI tool that can find and extract links from an .md file. It allows to validate the status of each link and gives us statistics of the links found.'
 
@@ -27,7 +27,6 @@ if (validateOption && statsOption) {
   mdLinks(route, { validate: true })
     .then((links) => {
       console.log(colors.blue(statsValidate(links)));
-      console.log(links);
     })
     .catch((err) => {
       console.log(colors.red(err));
