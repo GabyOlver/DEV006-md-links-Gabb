@@ -74,4 +74,4 @@ After executing the command with the corresponding options and file path, the "m
 
 ## 5. Flowchart
 
-![Flowchart](./md-links-flujograma.png)
+![Flowchart](./flujograma.png)
