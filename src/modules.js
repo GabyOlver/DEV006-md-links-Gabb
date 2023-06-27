@@ -75,6 +75,12 @@ const statusLink = (url) => {
     })
 }
 
+//Pruebas funciones
+
+const rutaRelativa = 'archivos/misProyectos.md'
+const rutaAbsoluta = pathIsAbsolute(rutaRelativa);
+console.log(rutaAbsoluta)
+
 module.exports = {
     pathIsAbsolute,
     pathExists,
