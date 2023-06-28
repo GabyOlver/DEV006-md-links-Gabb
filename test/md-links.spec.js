@@ -77,6 +77,12 @@ it('should log the correct message when it is not a .md file', () => {
     console.error('Error:', error);
   })
 })
+it('Debe regresar un error si la ruta no existe', () => {
+  mdLinks('archivos/muchoText.md')
+  .catch((err) => {
+    console.error(`ERROR ${err}`);
+  })
+})
 });
 
 // MODULES.JS TESTS
