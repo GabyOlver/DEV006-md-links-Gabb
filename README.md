@@ -31,6 +31,12 @@ npm i -g md-links-gabyolvera
 ```
 ## 3. Usage
 
+For instructions on how to use the full command, simply run 'md-links'.
+
+```
+md-links
+```
+
 Once the package is installed, you can use the following command in the command line:
 
 ```

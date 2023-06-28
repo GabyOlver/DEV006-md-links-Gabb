@@ -1,6 +1,6 @@
 {
   "name": "md-links-gabyolvera",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "It is a CLI tool that can find and extract links from an .md file. It allows to validate the status of each link and gives us statistics of the links found.",
   "engines": {
     "node": ">=16.x"
