@@ -1,6 +1,7 @@
 const path = require('node:path');
 const fs = require('node:fs');
 const https = require('node:https');
+const colors = require('colors');
 
 //Valida si la ruta es absoluta, sino la convierte a absoluta
 const pathIsAbsolute = (route) => { //Se recibe la ruta
@@ -22,7 +23,7 @@ const pathExists = (route) => { //Se va a validar si la ruta existe
 const mdFile = (route) => {
     const fileExt = path.extname(route); //Saber cual es la extension del archivo
     return fileExt !== '.md' ? (() => {
-        console.log('No .md files found');
+        console.log(colors.red('No .md files found'));
         return false; //process.exit(); 
     })() : true;
 }
@@ -77,9 +78,17 @@ const statusLink = (url) => {
 
 //Pruebas funciones
 
-const rutaRelativa = 'archivos/misProyectos.md'
-const rutaAbsoluta = pathIsAbsolute(rutaRelativa);
-console.log(rutaAbsoluta)
+// const rutaRelativa = 'archivos/misProyecto.md'
+// const rutaAbsoluta = pathIsAbsolute(rutaRelativa);
+// console.log(rutaAbsoluta)
+
+// pathExists(rutaAbsoluta)
+// .then((exists) => {
+//     console.log('Simon si existe')
+// })
+// .catch((err) => {
+//     console.log(`Error ${err}`)
+// })
 
 module.exports = {
     pathIsAbsolute,
