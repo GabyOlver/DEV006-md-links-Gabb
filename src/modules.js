@@ -3,44 +3,44 @@ const fs = require('node:fs');
 const https = require('node:https');
 const colors = require('colors');
 
-//Valida si la ruta es absoluta, sino la convierte a absoluta
-const pathIsAbsolute = (route) => { //Se recibe la ruta
-    const absoluteRoute = path.isAbsolute(route); //Validamos si es absoluta o relativa
-    const resolveRoute = !absoluteRoute ? path.resolve(route) : route; // Si la ruta no es absoluta se covierte a absoluta, si si es se entrega
+//Validating route
+const pathIsAbsolute = (route) => {
+    const absoluteRoute = path.isAbsolute(route);
+    const resolveRoute = !absoluteRoute ? path.resolve(route) : route; 
     return resolveRoute;
 }
 
-//Valida si la ruta existe
-const pathExists = (route) => { //Se va a validar si la ruta existe
+//Does the route exist?
+const pathExists = (route) => { 
     return new Promise((resolve, reject) => {
-        fs.access(route, fs.constants.F_OK, (err) => { //fs.access verifica si se puede acceder a un archivo: path es la ruta a validar, fs.constants.F_OK Comprueba si el archivo o directorio existe. Y error  se ejecuta una vez que se completa la verificación. La función de devolución de llamada toma un parámetro de error, donde null indica que no se encontraron errores y, por lo tanto, se puede acceder al archivo o directorio.
+        fs.access(route, fs.constants.F_OK, (err) => { 
             err ? reject('Path does not exist') : resolve(true);
         })
     })
 }
 
-//Valida si es un archivo .md
+//Validate extension
 const mdFile = (route) => {
-    const fileExt = path.extname(route); //Saber cual es la extension del archivo
+    const fileExt = path.extname(route); 
     return fileExt !== '.md' ? (() => {
         console.log(colors.red('No .md files found'));
         return false; //process.exit(); 
     })() : true;
 }
 
-//Validar si es un directorio
-//Buscar archivos en el directorio
+//Validate if it is a directory
+//Find files in the directory
 
-// Valida si se puede leer el contenido del archivo
-const readFile = (filePath) => {
+// Validates if the contents of the file can be read
+const readFile = (route) => {
     return new Promise((resolve, reject) => {
-        fs.readFile(filePath, (err, data) => {
+        fs.readFile(route, (err, data) => {
             err ? reject('Cannot read file') : resolve(data.toString());
         })
     })
 }
 
-//Buscando Links en el archivo
+//Searching for links in the archive
 const findLinks = (content, filePath) => {
     const linksInFile = [];
     const linksRegExp = /\[([\p{L}0-9._ -]+)\]\((?!#)(https?:\/\/[a-zA-Z0-9\/._ -]+)\)/gu
@@ -56,7 +56,7 @@ const findLinks = (content, filePath) => {
     return linksInFile;
 }
 
-//STATUS DEL LINK
+//STATUS
 const statusLink = (url) => {
     return new Promise((resolve, reject) => {
         const req = https.get(url, (res) => {
@@ -75,20 +75,6 @@ const statusLink = (url) => {
         })
     })
 }
-
-//Pruebas funciones
-
-// const rutaRelativa = 'archivos/misProyecto.md'
-// const rutaAbsoluta = pathIsAbsolute(rutaRelativa);
-// console.log(rutaAbsoluta)
-
-// pathExists(rutaAbsoluta)
-// .then((exists) => {
-//     console.log('Simon si existe')
-// })
-// .catch((err) => {
-//     console.log(`Error ${err}`)
-// })
 
 module.exports = {
     pathIsAbsolute,

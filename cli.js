@@ -7,9 +7,8 @@ const { mdLinks } = require('./src/index.js');
 const { simpleStats, statsValidate } = require('./src/stats.js')
 
 const route = process.argv[2]
-const [, , ...args] = process.argv;
-const validateOption = args.includes('--validate');
-const statsOption = args.includes('--stats');
+const validateOption = process.argv.includes('--validate');
+const statsOption = process.argv.includes('--stats');
 
 const howToUse = 'Use: md-links <path-to-file> [options]';
 const commands = '--validate: validates the status of found links\n --stats: Gives link statistics'
